@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Water",
+    "message": "drink water",
+    "every": 5
+  },
+  {
+    "name": "Push ups",
+    "message": "5 push ups",
+    "every": 10
+  },
+  {
+    "name": "Stretches",
+    "message": "Neck and back stretches",
+    "every": 20
+  }
+]
