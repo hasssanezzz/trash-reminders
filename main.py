@@ -6,14 +6,16 @@ import os
 import sys
 import getopt
 
+
 # Configurations
 SOUND_SRC = "c:/Windows/Media/notify.wav"
 INPUT_SRC = "data.json"
+NOTIFICATION = False
 
 # parsing config
 argumentList = sys.argv[1:]
-LONG_OPTIONS = ["input-file", "sound-file"]
-OPTIONS = "i:s:"
+OPTIONS = "ni:s:"
+LONG_OPTIONS = ["input-file", "sound-file", "notification"]
 
 # parsed json
 data = {}
@@ -28,6 +30,16 @@ try:
         elif currentArgument in ("-s", "--sound-file"):
             print(f"[*] Getting sound file from ({currentValue})")
             SOUND_SRC = currentValue
+        elif currentArgument in ("-n", "--notification"):
+            print(f"[*] Getting sound file from ({currentValue})")
+            NOTIFICATION = True
+
+            try:
+                from plyer import notification
+            except ImportError:
+                print("[!] Error in importing the 'plyer' module")
+                NOTIFICATION = False
+                
 except getopt.error as err:
     print(str(err))
 
@@ -38,19 +50,40 @@ try:
     data = json.load(f)
     f.close()
 except:
-    print("[!] Error: Can't find the data.json file")
+    print(f"[!] Error: Can't open the {INPUT_SRC} file.")
 
 
-def remind(every, name, message):
+def remind_message_box(every, name, message):
     while True:
         time.sleep(every * 60)
-        os.system(SOUND_SRC)
+        try:
+            os.system(SOUND_SRC)
+        except:
+            print(f"[!] Error: Can't open sound file from {SOUND_SRC}.")
         res = ctypes.windll.user32.MessageBoxW(0, message, name, 5)
         if res == 2:
             break
 
+
+def remind_notification(every, name, message):
+    while True:
+        time.sleep(every * 60)
+        notification.notify(
+            title=f'Reminder - {name}',
+            message=message,
+            app_icon=None,
+            timeout=1,
+        )
+
+
 print("\n[*] ======= reminders initialized ======= \n")
 for i in data:
     print(f"[+] Reminder '{i['name']}' created")
-    x = Thread(target=remind, args=(i['every'], i['name'], i['message']))
+    if NOTIFICATION:
+        x = Thread(target=remind_notification, args=(
+            i['every'], i['name'], i['message']))
+    else:
+        x = Thread(target=remind_message_box, args=(
+            i['every'], i['name'], i['message']))
     x.start()
+    print()
