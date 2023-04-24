@@ -2,7 +2,7 @@
   {
     "name": "Water",
     "message": "drink water",
-    "every": 5
+    "every": 0.5
   },
   {
     "name": "Push ups",
