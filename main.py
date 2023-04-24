@@ -97,7 +97,6 @@ for i in data:
 root = tk.Tk()
 root.title("JSON CRUD Operation")
 root.geometry("600x500")
-
 # Function to add data to JSON file
 def add_data():
     name = entry_name.get()
@@ -130,6 +129,7 @@ def add_data():
 
     messagebox.showinfo("Success", "Data added successfully.")
     clear_entries()
+    read_data()
 
 def read_data():
     data_listbox.delete(0, tk.END)
@@ -181,6 +181,7 @@ def update_data():
 
     messagebox.showinfo("Success", "Data updated successfully.")
     clear_entries()
+    read_data()
 
 def delete_data():
     name = entry_name.get()
@@ -202,6 +203,7 @@ def delete_data():
 
     messagebox.showinfo("Success", "Data deleted successfully.")
     clear_entries()
+    read_data()
 
 def clear_entries():
     entry_name.delete(0, tk.END)
@@ -218,6 +220,7 @@ data_listbox["fg"] = "#333333"
 data_listbox["justify"] = "center"
 data_listbox.place(x=0,y=0,width=598,height=173)
 
+read_data()
 # Create input fields 
 
 
@@ -283,13 +286,13 @@ btn_add["text"] = "Add"
 btn_add.place(x=0,y=220,width=128,height=41)
 btn_add["command"] = add_data
 
-btn_read=tk.Button(root)
-btn_read["bg"] = "#f0f0f0"
-btn_read["fg"] = "#000000"
-btn_read["justify"] = "center"
-btn_read["text"] = "Read"
-btn_read.place(x=220,y=430,width=148,height=43)
-btn_read["command"] = read_data
+# btn_read=tk.Button(root)
+# btn_read["bg"] = "#f0f0f0"
+# btn_read["fg"] = "#000000"
+# btn_read["justify"] = "center"
+# btn_read["text"] = "Read"
+# btn_read.place(x=220,y=430,width=148,height=43)
+# btn_read["command"] = read_data
 
 
 btn_update=tk.Button(root)

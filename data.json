@@ -1,17 +1,22 @@
 [
-  {
-    "name": "Water",
-    "message": "drink water",
-    "every": 0.5
-  },
-  {
-    "name": "Push ups",
-    "message": "5 push ups",
-    "every": 10
-  },
-  {
-    "name": "Stretches",
-    "message": "Neck and back stretches",
-    "every": 20
-  }
+    {
+        "name": "Water",
+        "message": "drink water",
+        "every": 0.5
+    },
+    {
+        "name": "Push ups",
+        "message": "5 push ups",
+        "every": 10
+    },
+    {
+        "name": "Stretches",
+        "message": "Neck and back stretches",
+        "every": 20
+    },
+    {
+        "name": "Mahmoud",
+        "message": "I love Hassan Ezz",
+        "every": 3
+    }
 ]
