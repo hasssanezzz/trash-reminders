@@ -16,6 +16,8 @@ SOUND_SRC = "c:/Windows/Media/notify.wav"
 INPUT_SRC = "data.json"
 NOTIFICATION = False
 
+
+
 # parsing config
 argumentList = sys.argv[1:]
 OPTIONS = "ni:s:"
@@ -79,20 +81,28 @@ def remind_notification(every, name, message):
             timeout=1,
         )
 
+def set_notification(x):
+    NOTIFICATION = x
+    use_thread()
 
-print("\n[*] ======= reminders initialized ======= \n")
-for i in data:
-    print(f"[+] Reminder '{i['name']}' created")
+def notify(every, name, message):
     if NOTIFICATION:
-        x = Thread(target=remind_notification, args=(
-            i['every'], i['name'], i['message']))
+        remind_notification(every, name, message)
     else:
-        x = Thread(target=remind_message_box, args=(
-            i['every'], i['name'], i['message']))
-    x.start()
-    print()
+        remind_message_box(every, name, message)
 
 
+
+
+def use_thread():
+    print("\n[*] ======= reminders initialized ======= \n")
+    for i in data:
+        print(f"[+] Reminder '{i['name']}' created")
+        x = Thread(target=notify, args=(i['every'], i['name'], i['message']))
+        x.start()
+        print()
+
+use_thread()
 # Define the GUI window
 root = tk.Tk()
 root.title("JSON CRUD Operation")
@@ -138,9 +148,6 @@ def read_data():
         data = json.load(file)
         for item in data:
             data_listbox.insert(tk.END, f"Name: {item['name']}, Message: {item['message']}, every: {item['every']}")
-
-
-
 
 def update_data():
     name = entry_name.get()
@@ -209,6 +216,42 @@ def clear_entries():
     entry_name.delete(0, tk.END)
     entry_message.delete(0, tk.END)
     entry_every.delete(0, tk.END)
+
+def show_message_box():
+    dialog = tk.Toplevel(root)
+    dialog.title("Select The Mode")
+
+    dialog_width = 200
+    dialog_height = 200
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    dialog_x = (screen_width - dialog_width) // 2
+    dialog_y = (screen_height - dialog_height) // 2
+    dialog.geometry(f"{dialog_width}x{dialog_height}+{dialog_x}+{dialog_y}")
+
+
+    selected_option = tk.StringVar()
+
+    radio_button1 = tk.Radiobutton(dialog, text="Notification", variable=selected_option, value="Notification")
+    radio_button2 = tk.Radiobutton(dialog, text="Message box", variable=selected_option, value="Message box")
+
+    radio_button1.select()
+
+    done_button = tk.Button(dialog, text="Done", command=dialog.destroy)
+
+    radio_button1.pack(pady=5)
+    radio_button2.pack(pady=5)
+    done_button.pack(pady=10)
+
+    dialog.wait_window()
+
+    # Retrieve the selected value and perform action
+    selected_value = selected_option.get()
+    if selected_value == "Notification":
+        set_notification(True)
+    else:
+        set_notification(False)
+
 
 # Create list
 
@@ -314,5 +357,17 @@ btn_delete["justify"] = "center"
 btn_delete["text"] = "Delete"
 btn_delete.place(x=0,y=380,width=128,height=43)
 btn_delete["command"] = delete_data
+
+btn_changeMod=tk.Button(root)
+btn_changeMod["bg"] = "#f0f0f0"
+ft = tkFont.Font(family='Times',size=10)
+btn_changeMod["font"] = ft
+btn_changeMod["fg"] = "#000000"
+btn_changeMod["justify"] = "center"
+btn_changeMod["text"] = "Change Mode"
+btn_changeMod.place(x=472,y=300,width=128,height=43)
+btn_changeMod["command"] = show_message_box
+
+
 
 root.mainloop()
